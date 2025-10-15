@@ -37,13 +37,14 @@ export function Home() {
     if (!prediction) return;
 
     try {
-      await wasteApi.createScan({
-        category_id: prediction.categoryDetails.name, // Using name as fallback ID
+      const result = await wasteApi.createScan({
+        category_id: prediction.categoryDetails.id, // Using actual UUID from database
         confidence_score: prediction.confidence,
         points_earned: prediction.categoryDetails.points_value ?? 50,
         co2_saved_kg: prediction.categoryDetails.co2_impact_kg ?? 1.2,
       });
 
+      // Refresh profile to get updated stats
       await refreshProfile();
       setSaved(true);
 
