@@ -15,26 +15,7 @@ export async function classifyWaste(imageFile: File): Promise<WastePrediction> {
     .single();
 
   if (error || !categoryData) {
-    console.error("Error fetching category:", error);
-    // Fallback to default values if category not found
-    const categoryDetails: CategoryDetails = {
-      id: "default",
-      name: predictedCategory,
-      description: `Predicted as ${predictedCategory} by AI model.`,
-      disposal_instructions: "Dispose properly",
-      environmental_impact: "Low",
-      points_value: 50,
-      co2_impact_kg: 1.2,
-      icon_name: "recycle",
-      color: "#34D399",
-      created_at: new Date().toISOString(),
-    };
-    
-    return {
-      category: predictedCategory,
-      confidence,
-      categoryDetails,
-    };
+    throw new Error(`Category '${predictedCategory}' not found in database. Please seed waste_categories.`);
   }
 
   const categoryDetails: CategoryDetails = {
